@@ -39,9 +39,10 @@ public class get_rgb
             {
                 for (int j = 0; j < height; j++)
                 {
-                    int r = (imgs[0].getRGB(i,j) >> 16) & 0xFF;
-                    int g = (imgs[0].getRGB(i,j) >> 8) & 0xFF;
-                    int b = (imgs[0].getRGB(i,j) >> 0) & 0xFF;
+                    Color img = new Color(imgs[0].getRGB(i,j));
+                    int r = img.getRed();
+                    int g = img.getGreen();
+                    int b = img.getBlue();
                     if(time == 0)
                     {
                         g = 0;

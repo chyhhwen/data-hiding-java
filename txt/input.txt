@@ -1,1 +1,1 @@
-hello write abc
+hello write ab

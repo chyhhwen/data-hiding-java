@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 public class mix_rgb
 {
-    public static void jointPic(List<File> files, String newFileName)
+    public static void jointPic(List<File> files, String newFileName,int use)
     {
         File pic = new File("C:/Users/User/Desktop/data-hiding/pic/data.jpg");
         int width = 0;
@@ -39,9 +39,27 @@ public class mix_rgb
             {
                 for (int j = 0; j < height; j++)
                 {
-                    int r = (imgs[0].getRGB(i,j) >> 16) & 0xFF;
-                    int g = (imgs[1].getRGB(i,j) >> 8) & 0xFF;
-                    int b = (imgs[2].getRGB(i,j) >> 0) & 0xFF;
+                    Color img1 = new Color(imgs[0].getRGB(i,j));
+                    Color img2 = new Color(imgs[1].getRGB(i,j));
+                    Color img3 = new Color(imgs[2].getRGB(i,j));
+                    int r = img1.getRed();
+                    int g = img2.getGreen();
+                    int b = img3.getBlue();
+                    if(use == 1)
+                    {
+                        if(r > 4)
+                        {
+                            r -= 4;
+                        }
+                        if(g > 4)
+                        {
+                            g -= 4;
+                        }
+                        if(b > 4)
+                        {
+                            b -= 4;
+                        }
+                    }
                     int rgb=new Color(r,g,b).getRGB();
                     imgNew.setRGB(i, j,rgb);
                 }
@@ -61,13 +79,15 @@ public class mix_rgb
     public static void main(String[] args) throws IOException
     {
         List<File> files = new ArrayList<>();
-        String newFileName = "mix.jpg";
+        String newFileName = "key.jpg";
         File file1 = new File("C:/Users/User/Desktop/data-hiding/pic/r.jpg");
         File file2 = new File("C:/Users/User/Desktop/data-hiding/pic/g.jpg");
         File file3 = new File("C:/Users/User/Desktop/data-hiding/pic/b.jpg");
         files.add(file1);
         files.add(file2);
         files.add(file3);
-        jointPic(files, newFileName);
+        jointPic(files, newFileName,0);
+        newFileName = "box.jpg";
+        jointPic(files, newFileName,1);
     }
 }

@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 
 public class encode
 {
-    public static void get_key(List<File> files, String newFileName)
+    public static void get_rgb(List<File> files, String newFileName, int time)
     {
         File pic = new File("C:/Users/User/Desktop/data-hiding/pic/data.jpg");
         int width = 0;
@@ -38,69 +38,10 @@ public class encode
             {
                 for (int j = 0; j < height; j++)
                 {
-                    int r = (imgs[0].getRGB(i,j) >> 16) & 0xFF;
-                    int g = (imgs[0].getRGB(i,j) >> 8) & 0xFF;
-                    int b = (imgs[0].getRGB(i,j) >> 0) & 0xFF;
-                    if(r > size)
-                    {
-                        r -= size;
-                    }
-                    if(g > size)
-                    {
-                        g -= size;
-                    }
-                    if(b > size)
-                    {
-                        b -= size;
-                    }
-                    int rgb=new Color(r,g ,b).getRGB();
-                    imgNew.setRGB(i, j,rgb);
-                }
-            }
-
-            File outFile = new File("C:/Users/User/Desktop/data-hiding/pic/" + newFileName);
-            ImageIO.write(imgNew, "jpg", outFile);
-            System.out.println("===生產成功===");
-        }
-        catch (Exception e)
-        {
-            System.out.println("===生產失敗===");
-            e.printStackTrace();
-        }
-    }
-    public static void get_rgb(List<File> files, String newFileName, int time)
-    {
-        File pic = new File("C:/Users/User/Desktop/data-hiding/pic/key.jpg");
-        int width = 0;
-        int height = 0;
-        try
-        {
-            BufferedImage img = ImageIO.read(new FileInputStream(pic));
-            width = img.getWidth();
-            height = img.getHeight();
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        try
-        {
-            BufferedImage[] imgs = new BufferedImage[files.size()];
-
-            for (int i = 0; i < files.size(); i++)
-            {
-                imgs[i] = ImageIO.read(files.get(i));
-            }
-
-            BufferedImage imgNew = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            int size = 4;
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
-                {
-                    int r = (imgs[0].getRGB(i,j) >> 16) & 0xFF;
-                    int g = (imgs[0].getRGB(i,j) >> 8) & 0xFF;
-                    int b = (imgs[0].getRGB(i,j) >> 0) & 0xFF;
+                    Color img = new Color(imgs[0].getRGB(i,j));
+                    int r = img.getRed();
+                    int g = img.getGreen();
+                    int b = img.getBlue();
                     if(time == 0)
                     {
                         g = 0;
@@ -123,11 +64,90 @@ public class encode
 
             File outFile = new File("C:/Users/User/Desktop/data-hiding/pic/" + newFileName);
             ImageIO.write(imgNew, "jpg", outFile);
-            System.out.println("===更改成功===");
+            System.out.println("===新增成功===");
         }
         catch (Exception e)
         {
-            System.out.println("===更改失敗===");
+            System.out.println("===新增失敗===");
+            e.printStackTrace();
+        }
+    }
+    public static void mix_rgb(List<File> files, String newFileName,int use, Vector r1, Vector g1 ,Vector b1)
+    {
+        File pic = new File("C:/Users/User/Desktop/data-hiding/pic/data.jpg");
+        int width = 0;
+        int height = 0;
+        try
+        {
+            BufferedImage img = ImageIO.read(new FileInputStream(pic));
+            width = img.getWidth();
+            height = img.getHeight();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        try
+        {
+            BufferedImage[] imgs = new BufferedImage[files.size()];
+
+            for (int i = 0; i < files.size(); i++)
+            {
+                imgs[i] = ImageIO.read(files.get(i));
+            }
+
+            BufferedImage imgNew = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            int o = 0;
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    Color img1 = new Color(imgs[0].getRGB(i,j));
+                    Color img2 = new Color(imgs[1].getRGB(i,j));
+                    Color img3 = new Color(imgs[2].getRGB(i,j));
+                    int r = img1.getRed();
+                    int g = img2.getGreen();
+                    int b = img3.getBlue();
+                    if(r > 9)
+                    {
+                        r -= 9;
+                    }
+                    if(g > 9)
+                    {
+                        g -= 9;
+                    }
+                    if(b > 9)
+                    {
+                        b -= 9;
+                    }
+                    if(use == 1)
+                    {
+                        if(o < r1.size())
+                        {
+                            r += (int) r1.get(o);
+                        }
+                        if(o < g1.size())
+                        {
+                            g += (int) g1.get(o);
+                        }
+                        if(o < b1.size())
+                        {
+                            b += (int) b1.get(o);
+                        }
+                        o += 1;
+                    }
+                    int rgb=new Color(r,g,b).getRGB();
+                    imgNew.setRGB(i, j,rgb);
+                }
+            }
+
+            File outFile = new File("C:/Users/User/Desktop/data-hiding/pic/" + newFileName);
+            ImageIO.write(imgNew, "jpg", outFile);// 寫圖片
+            System.out.println("===合成成功===");
+        }
+        catch (Exception e)
+        {
+            System.out.println("===合成失敗===");
             e.printStackTrace();
         }
     }
@@ -197,142 +217,13 @@ public class encode
         System.out.println();
     }
 
-    public static void put_rgb(List<File> files, String newFileName,int time,Vector v)
-    {
-        File pic = new File("C:/Users/User/Desktop/data-hiding/pic/key.jpg");
-        int width = 0;
-        int height = 0;
-        try
-        {
-            BufferedImage img = ImageIO.read(new FileInputStream(pic));
-            width = img.getWidth();
-            height = img.getHeight();
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        try
-        {
-            BufferedImage[] imgs = new BufferedImage[files.size()];
-
-            for (int i = 0; i < files.size(); i++)
-            {
-                imgs[i] = ImageIO.read(files.get(i));
-            }
-            int max = v.size();
-            BufferedImage imgNew = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            int o = 0;
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
-                {
-                    int r = (imgs[time].getRGB(i,j) >> 16) & 0xFF;
-                    int g = (imgs[time].getRGB(i,j) >> 8) & 0xFF;
-                    int b = (imgs[time].getRGB(i,j) >> 0) & 0xFF;
-                    if(time == 0)
-                    {
-                        if(o < max)
-                        {
-                            r += (int)v.get(o) - 36;
-                            System.out.print(r + " ");
-                            o += 1;
-                        }
-                    }
-                    if(time == 1)
-                    {
-                        if(o < max)
-                        {
-                            g += (int)v.get(o) - 37;
-                            System.out.print(g + " ");
-                            o += 1;
-                        }
-                    }
-                    if(time == 2)
-                    {
-                        if(o < max)
-                        {
-                            b += (int)v.get(o) - 36;
-                            System.out.print(b + " ");
-                            o += 1;
-                        }
-                    }
-                    int rgb=new Color(r,g ,b).getRGB();
-                    imgNew.setRGB(i, j,rgb);
-                }
-            }
-
-            File outFile = new File("C:/Users/User/Desktop/data-hiding/pic/" + newFileName);
-            ImageIO.write(imgNew, "jpg", outFile);
-            System.out.println();
-        }
-        catch (Exception e)
-        {
-            System.out.println("===生產失敗===");
-            e.printStackTrace();
-        }
-    }
-
-    public static void mix_rgb(List<File> files, String newFileName)
-    {
-        File pic = new File("C:/Users/User/Desktop/data-hiding/pic/key.jpg");
-        int width = 0;
-        int height = 0;
-        try
-        {
-            BufferedImage img = ImageIO.read(new FileInputStream(pic));
-            width = img.getWidth();
-            height = img.getHeight();
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        try
-        {
-            BufferedImage[] imgs = new BufferedImage[files.size()];
-
-            for (int i = 0; i < files.size(); i++)
-            {
-                imgs[i] = ImageIO.read(files.get(i));
-            }
-
-            BufferedImage imgNew = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
-                {
-                    int r = (imgs[0].getRGB(i,j) >> 16) & 0xFF;
-                    int g = (imgs[1].getRGB(i,j) >> 8) & 0xFF;
-                    int b = (imgs[2].getRGB(i,j) >> 0) & 0xFF;
-                    int rgb=new Color(r,g,b).getRGB();
-                    imgNew.setRGB(i, j,rgb);
-                }
-            }
-
-            File outFile = new File("C:/Users/User/Desktop/data-hiding/pic/" + newFileName);
-            ImageIO.write(imgNew, "jpg", outFile);// 寫圖片
-            System.out.println("===合併成功===");
-        }
-        catch (Exception e)
-        {
-            System.out.println("===合併失敗===");
-            e.printStackTrace();
-        }
-    }
-
     public static void main(String[] args) throws IOException
     {
-        /*產生公鑰*/
-        List<File> files1 = new ArrayList<>();
-        String newFileName = "key.jpg";
-        File file = new File("C:/Users/User/Desktop/data-hiding/pic/data.jpg");
-        files1.add(file);
-        get_key(files1, newFileName);
         /*產生rgb*/
-        List<File> files2 = new ArrayList<>();
-        files2.add(file);
+        List<File> files = new ArrayList<>();
+        String newFileName = "";
+        File file = new File("C:/Users/User/Desktop/data-hiding/pic/data.jpg");
+        files.add(file);
         for(int i=0;i<3;i++)
         {
             if(i == 0)
@@ -347,7 +238,15 @@ public class encode
             {
                 newFileName = "b.jpg";
             }
-            get_rgb(files2, newFileName , i);
+            get_rgb(files, newFileName , i);
+        }
+        try
+        {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e)
+        {
+            throw new RuntimeException(e);
         }
         /*讀取txt*/
         Vector r = new Vector();
@@ -369,29 +268,18 @@ public class encode
             System.out.print(b.get(i) + " ");
         }
         System.out.println();
-        /*資料寫入*/
-        List<File> files3 = new ArrayList<>();
+        /*產生公鑰和傳送檔*/
+        List<File> files1 = new ArrayList<>();
         File file1 = new File("C:/Users/User/Desktop/data-hiding/pic/r.jpg");
         File file2 = new File("C:/Users/User/Desktop/data-hiding/pic/g.jpg");
         File file3 = new File("C:/Users/User/Desktop/data-hiding/pic/b.jpg");
-        files3.add(file1);
-        files3.add(file2);
-        files3.add(file3);
-        newFileName = "put_r.jpg";
-        put_rgb(files3, newFileName , 0,r);
-        newFileName = "put_g.jpg";
-        put_rgb(files3, newFileName , 1,g);
-        newFileName = "put_b.jpg";
-        put_rgb(files3, newFileName , 2,b);
-        /*照片合成*/
-        List<File> files4 = new ArrayList<>();
-        newFileName = "mix.jpg";
-        File file4 = new File("C:/Users/User/Desktop/data-hiding/pic/put_r.jpg");
-        File file5 = new File("C:/Users/User/Desktop/data-hiding/pic/put_g.jpg");
-        File file6 = new File("C:/Users/User/Desktop/data-hiding/pic/put_b.jpg");
-        files4.add(file4);
-        files4.add(file5);
-        files4.add(file6);
-        mix_rgb(files4, newFileName);
+        files1.add(file1);
+        files1.add(file2);
+        files1.add(file3);
+        newFileName = "key.jpg";
+        mix_rgb(files1, newFileName,0,r,g,b);
+        newFileName = "box.jpg";
+        mix_rgb(files1, newFileName,1,r,g,b);
+
     }
 }
