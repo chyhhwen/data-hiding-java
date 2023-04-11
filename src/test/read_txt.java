@@ -1,9 +1,9 @@
 import java.io.*;
 import java.util.Vector;
 
-public class Main
+public class read_txt
 {
-    public Main()
+    public read_txt()
     {
         File input = new File( "C:/Users/User/Desktop/data-hiding/txt/input.txt");
         Vector v = new Vector();
@@ -84,6 +84,6 @@ public class Main
     }
     public static void main(String[] args) throws IOException
     {
-       new Main();
+        new read_txt();
     }
 }
